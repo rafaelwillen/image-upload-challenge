@@ -1,5 +1,8 @@
 import build from "./app";
 
+// env.config();
+console.log(process.env);
+
 const port = (process.env.PORT || 3000) as number;
 
 async function main() {
