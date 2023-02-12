@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import { submitFile } from "./api";
 import Button from "./components/Button";
 import Card from "./components/Card";
 import DragAndDrop from "./components/DragAndDrop";
@@ -8,8 +9,12 @@ function App() {
   const [isLoading, setLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  function handleFileSubmission(file: File) {
-    console.log(file);
+  async function handleFileSubmission(file: File) {
+    setLoading(true);
+    await submitFile(file, (progress) => {
+      setLoadingProgress(progress.progress || 0);
+    });
+    setLoading(false);
   }
 
   function handleFileSubmissionInput(e: ChangeEvent<HTMLInputElement>) {
@@ -21,7 +26,7 @@ function App() {
     <div className="font-main font-medium flex flex-col items-center h-screen pb-8 bg-neutral-200">
       <div className="flex-1 flex items-center">
         {isLoading ? (
-          <LoadingCard />
+          <LoadingCard loadingProgress={loadingProgress} />
         ) : (
           <Card>
             <h1 className="text-lg  tracking-tight text-[#4F4F4F] mb-4">
