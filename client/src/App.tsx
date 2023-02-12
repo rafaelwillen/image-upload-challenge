@@ -2,18 +2,24 @@ import { ChangeEvent, useState } from "react";
 import { submitFile } from "./api";
 import Button from "./components/Button";
 import Card from "./components/Card";
+import Container from "./components/Container";
 import DragAndDrop from "./components/DragAndDrop";
 import LoadingCard from "./components/LoadingCard";
+import SuccessfulUpload from "./components/SucessfulUpload";
 
 function App() {
   const [isLoading, setLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [imageUrl, setImageUrl] = useState("okok");
 
   async function handleFileSubmission(file: File) {
     setLoading(true);
-    await submitFile(file, (progress) => {
+    const response = await submitFile(file, (progress) => {
       setLoadingProgress(progress.progress || 0);
     });
+    if (response) {
+      setImageUrl(response.url);
+    }
     setLoading(false);
   }
 
@@ -22,8 +28,18 @@ function App() {
     if (file) handleFileSubmission(file);
   }
 
+  if (imageUrl) {
+    return (
+      <Container>
+        <div className="flex-1 flex items-center">
+          <SuccessfulUpload imgUrl={imageUrl} />
+        </div>
+      </Container>
+    );
+  }
+
   return (
-    <div className="font-main font-medium flex flex-col items-center h-screen pb-8 bg-neutral-200">
+    <Container>
       <div className="flex-1 flex items-center">
         {isLoading ? (
           <LoadingCard loadingProgress={loadingProgress} />
@@ -58,7 +74,7 @@ function App() {
           Rafael Willen
         </a>
       </p>
-    </div>
+    </Container>
   );
 }
 
