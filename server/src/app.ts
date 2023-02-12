@@ -1,4 +1,5 @@
 import cors from "@fastify/cors";
+import env from "dotenv";
 import fastify, { FastifyBaseLogger, FastifyServerOptions } from "fastify";
 import { IncomingMessage, Server, ServerResponse } from "http";
 import route from "./route";
@@ -9,6 +10,7 @@ function build(
     FastifyBaseLogger
   >
 ) {
+  env.config();
   const app = fastify(options);
 
   app.register(cors);
