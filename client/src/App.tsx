@@ -10,7 +10,7 @@ import SuccessfulUpload from "./components/SucessfulUpload";
 function App() {
   const [isLoading, setLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [imageUrl, setImageUrl] = useState("okok");
+  const [imageUrl, setImageUrl] = useState("");
 
   async function handleFileSubmission(file: File) {
     setLoading(true);
@@ -28,11 +28,16 @@ function App() {
     if (file) handleFileSubmission(file);
   }
 
+  function handleClearFields() {
+    setImageUrl("");
+    setLoadingProgress(0);
+  }
+
   if (imageUrl) {
     return (
       <Container>
         <div className="flex-1 flex items-center">
-          <SuccessfulUpload imgUrl={imageUrl} />
+          <SuccessfulUpload onClear={handleClearFields} imgUrl={imageUrl} />
         </div>
       </Container>
     );
