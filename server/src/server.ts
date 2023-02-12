@@ -1,7 +1,7 @@
+import dotenv from "dotenv";
 import build from "./app";
 
-// env.config();
-console.log(process.env);
+dotenv.config();
 
 const port = (process.env.PORT || 3000) as number;
 

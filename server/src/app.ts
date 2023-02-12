@@ -1,7 +1,6 @@
 import cors from "@fastify/cors";
 import fastify, { FastifyBaseLogger, FastifyServerOptions } from "fastify";
 import { IncomingMessage, Server, ServerResponse } from "http";
-import cloudinary from "./config/cloudinary";
 import route from "./route";
 
 function build(
@@ -11,8 +10,6 @@ function build(
   >
 ) {
   const app = fastify(options);
-
-  console.log(cloudinary.config());
 
   app.register(cors);
 
