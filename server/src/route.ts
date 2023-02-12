@@ -1,25 +1,8 @@
 import { FastifyInstance } from "fastify";
 import multer from "fastify-multer";
 import fs from "fs";
-import path from "path";
-import { v4 as uuid } from "uuid";
 import cloudinary from "./config/cloudinary";
-
-const storage = multer.diskStorage({
-  destination: (_, file, callback) => {
-    const fileDir = path.join(__dirname, "../uploads");
-    if (!fs.existsSync(fileDir)) fs.mkdirSync(fileDir);
-    callback(null, fileDir);
-  },
-  filename: (_, file, callback) => {
-    if (!file.mimetype.includes("image/"))
-      return callback(new Error("Invalid File Type"));
-    const extension = file.originalname.split(".").at(-1);
-    callback(null, `${uuid()}.${extension}`);
-  },
-});
-
-const upload = multer({ dest: "uploads/", storage });
+import { upload } from "./config/multer";
 
 async function routes(fastify: FastifyInstance, options: Object) {
   fastify.register(multer.contentParser);
@@ -33,12 +16,12 @@ async function routes(fastify: FastifyInstance, options: Object) {
           message: "Error on submitting the file",
         });
       }
-
       try {
         const result = await cloudinary.uploader.upload(filePath, {
           use_filename: true,
           unique_filename: false,
           overwrite: false,
+          folder: "images",
         });
         fs.rmSync(filePath);
         reply.status(200).send({
